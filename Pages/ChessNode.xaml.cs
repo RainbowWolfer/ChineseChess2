@@ -99,8 +99,8 @@ namespace ChineseChess2.Pages {
 				MyElipse.Stroke = new SolidColorBrush(color);
 				MyNameText.Text = ChessPage.ConvertChinese(node.type.Value, node.side);
 			}
-			MyTestText.Text = node.pos.ToString();
-			//MyTestText.Text = "";
+			//MyTestText.Text = node.pos.ToString();
+			MyTestText.Text = "";
 		}
 
 		private void Grid_Tapped(object sender, TappedRoutedEventArgs e) {
