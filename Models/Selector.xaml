@@ -1,0 +1,18 @@
+﻿<UserControl
+    x:Class="ChineseChess2.Models.Selector"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ChineseChess2.Models"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="80"
+    d:DesignWidth="80">
+
+	<Grid x:Name="MyGrid" Height="80" Width="80" Visibility="Visible">
+		<Polyline Stroke="{x:Bind ColorBrush}" StrokeThickness="5" Points="25,5,5,5,5,25"/>
+		<Polyline Stroke="{x:Bind ColorBrush}" StrokeThickness="5" Points="55,5,75,5,75,25"/>
+		<Polyline Stroke="{x:Bind ColorBrush}" StrokeThickness="5" Points="5,55,5,75,25,75"/>
+		<Polyline Stroke="{x:Bind ColorBrush}" StrokeThickness="5" Points="55,75,75,75,75,55"/>
+	</Grid>
+</UserControl>
