@@ -18,7 +18,15 @@ using Windows.UI.Xaml.Navigation;
 namespace ChineseChess2.Models {
 	public sealed partial class Selector: UserControl {
 		public Color color;
-		public Vector2 pos;
+		private Vector2 position;
+		public Vector2 Position {
+			get => position;
+			set {
+				position = value;
+				Grid.SetColumn(this, value.x);
+				Grid.SetRow(this, value.y);
+			}
+		}
 
 		public SolidColorBrush ColorBrush => new SolidColorBrush(color);
 
@@ -27,9 +35,10 @@ namespace ChineseChess2.Models {
 			set => MyGrid.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
 		}
 
-		public Selector() {
+		public Selector(Vector2 position, Color color) {
 			this.InitializeComponent();
-			color = Colors.Blue;
+			this.color = color;
+			this.Position = position;
 		}
 	}
 }

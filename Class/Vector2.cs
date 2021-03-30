@@ -10,6 +10,8 @@ namespace ChineseChess2.Class {
 		public int x;
 		public int y;
 
+		public static readonly Vector2 Zero = new Vector2(0, 0);
+
 		public Vector2(int x, int y) {
 			this.x = x;
 			this.y = y;

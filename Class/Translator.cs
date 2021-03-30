@@ -21,11 +21,11 @@ namespace ChineseChess2.Class {
 		/// <summary>
 		/// upper is red, the other is black
 		/// </summary>
-		public static string Translate(Node[,] ns) {
+		public static string Translate(Dictionary<Vector2, Node> ns) {
 			string result = "";
-			for(int i = 0; i < ns.GetLength(1); i++) {
-				for(int j = 0; j < ns.GetLength(0); j++) {
-					Node n = ns[j, i];
+			for(int i = 0; i < HEIGHT; i++) {
+				for(int j = 0; j < WIDTH; j++) {
+					Node n = ns[new Vector2(j, i)];
 					if(n.type == null) {
 						ChangeNumber(ref result);
 					} else {

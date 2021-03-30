@@ -15,15 +15,28 @@ namespace ChineseChess2.Class {
 		private bool IsUpRed => ChessPage.isUpRed;
 		private bool IsRedTurn => ChessPage.IsRedTurn;
 		private Side CurrentSide => ChessPage.CurrentSide;
+		private Side OppositeSide => ChessPage.OppositeSide;
 
 		public MoveGenerator(Dictionary<Vector2, Node> nodes) {
 			this.nodes = nodes;
 		}
 
 		public List<Move> GenerateLegalMovs() {
-			List<Move> pseudoMoves = new List<Move>();
+			List<Move> pseudoMoves = GenerateMoves();
 			List<Move> legalMoves = new List<Move>();
+			foreach(Move moveToVerify in pseudoMoves) {
+				ChessPage.MakeMove(moveToVerify);
+				List<Move> opponentResponses = GenerateMoves();
+				if(opponentResponses.Any(res => 
+					ChessPage.GetKingNode(OppositeSide).pos == res.to
+				)) {
+					//still in check if do this move;
+				} else {
+					legalMoves.Add(moveToVerify);
+				}
 
+				ChessPage.UnmakeMove(moveToVerify);
+			}
 
 			return legalMoves;
 		}

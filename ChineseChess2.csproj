@@ -121,6 +121,7 @@
     </Compile>
     <Compile Include="Class\MoveGenerator.cs" />
     <Compile Include="Class\Node.cs" />
+    <Compile Include="Class\PieceValue.cs" />
     <Compile Include="Class\Translator.cs" />
     <Compile Include="Class\Vector2.cs" />
     <Compile Include="MainPage.xaml.cs">

@@ -20,6 +20,7 @@ namespace ChineseChess2.Pages {
 	public sealed partial class ChessPage: Page {
 		public const int WIDTH = 9;
 		public const int HEIGHT = 10;
+		public const string DEFAULTOPENING = "jmxsksxmj/9/1p5p1/b1b1b1b1b/9/9/B1B1B1B1B/1P5P1/9/JMXSKSXMJ/";
 
 		public static List<ChessNode> chessNodes;
 		public static Dictionary<Vector2, Node> nodes;
@@ -47,11 +48,11 @@ namespace ChineseChess2.Pages {
 			}
 		}
 		public static Side CurrentSide => IsRedTurn ? Side.Red : Side.Black;
+		public static Side OppositeSide => IsRedTurn ? Side.Black : Side.Red;
 
 		public ChessPage() {
 			this.InitializeComponent();
 			startPos = DefaultPos;
-			IsRedTurn = true;
 			history = new List<Move>();
 		}
 
@@ -64,23 +65,30 @@ namespace ChineseChess2.Pages {
 			legalMoveSelectors = new List<Selector>();
 			lastMoveSelectors = new Selector[2];
 
-			selector = new Selector() { Visible = false };
+			selector = new Selector(Vector2.Zero, Colors.Blue) { Visible = false };
 			MyMainGrid.Children.Insert(0, selector);
 
+			IsRedTurn = false;
 			for(int i = 0; i < WIDTH; i++) {
 				for(int j = 0; j < HEIGHT; j++) {
 					nodes = Translator.LoadNodes(
-						"jmxsksxmj/9/1p5p1/b1b1b1b1b/9/9/B1B1B1B1B/1P5P1/9/JMXSKSXMJ/"
+						"jmxsksxmj/9/4p2p1/b1b1P1b1b/9/9/B1B1B1B1B/7P1/9/JMXSKSXMJ/"
 					);
 					ChessNode cn = new ChessNode(GetNode(i, j));
 					cn.onClick += (n, p) => {
+						List<Move> legalMoves = new MoveGenerator(nodes).GenerateLegalMovs();
+						if(legalMoves.Count == 0) {
+							throw new Exception("WOW");
+						}
 						void Select(Vector2 target) {
 							startPos = target;
 							SetSelector(target);
+							ShowLegalMoves(legalMoves.Where((m) => m.from == cn.pos).ToList());
 						}
 						void Deselect() {
 							startPos = DefaultPos;
 							SetSelector(DefaultPos);
+							ClearLegalMoveSelectos();
 						}
 						if(Selected) {
 							if(p == startPos) {
@@ -91,7 +99,7 @@ namespace ChineseChess2.Pages {
 								Select(p);
 								return;
 							}
-							if(!new MoveGenerator(nodes).GenerateMoves().Contains(new Move(startPos, p))) {
+							if(!legalMoves.Contains(new Move(startPos, p))) {
 								return;
 							}
 							MakeMove(new Move(startPos, p));
@@ -184,15 +192,40 @@ namespace ChineseChess2.Pages {
 				item.UpdateChessDisplay();
 			}
 		}
+		public void ShowLegalMoves(List<Move> ms) {
+			ClearLegalMoveSelectos();
+			foreach(Move m in ms) {
+				Selector s = new Selector(m.to, Colors.Green);
+				MyMainGrid.Children.Add(s);
+				legalMoveSelectors.Add(s);
+			}
+		}
+		public void ClearLegalMoveSelectos() {
+			foreach(Selector s in legalMoveSelectors) {
+				MyMainGrid.Children.Remove(s);
+			}
+			legalMoveSelectors.Clear();
+		}
 		public void SetSelector(Vector2 v) {
 			if(v == DefaultPos) {
 				selector.Visible = false;
 				return;
 			}
 			selector.Visible = true;
-			selector.pos = v;
-			Grid.SetColumn(selector, v.x);
-			Grid.SetRow(selector, v.y);
+			selector.Position = v;
+		}
+		public static Node GetKingNode(Side s) {
+			Node king = null;
+			foreach(Node n in nodes.Values) {
+				if(!n.castle) {
+					continue;
+				}
+				if(n.type == PieceType.SHUAI && n.side == s) {
+					king = n;
+					break;
+				}
+			}
+			return king;
 		}
 
 		public static Node GetNode(int x, int y) => nodes[new Vector2(x, y)];

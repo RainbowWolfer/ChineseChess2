@@ -1,4 +1,5 @@
-﻿using ChineseChess2.Pages;
+﻿using ChineseChess2.Class;
+using ChineseChess2.Pages;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,8 +7,10 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -44,7 +47,15 @@ namespace ChineseChess2 {
 			}
 			Window.Current.CoreWindow.KeyDown += (s, c) => {
 				switch(c.VirtualKey) {
-					case Windows.System.VirtualKey.W:
+					case VirtualKey.C:
+						string str = Translator.Translate(ChessPage.nodes);
+						DataPackage dp = new DataPackage() {
+							RequestedOperation = DataPackageOperation.Copy
+						};
+						dp.SetText(str);
+						Clipboard.SetContent(dp);
+						break;
+					case VirtualKey.W:
 						ChessPage.UndoMode();
 						break;
 				}
