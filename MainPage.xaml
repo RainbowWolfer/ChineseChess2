@@ -9,6 +9,13 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
 	<Grid>
-		<Frame x:Name="MyFrame"/>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition MaxWidth="400"/>
+		</Grid.ColumnDefinitions>
+		<Frame x:Name="MyFrame" Grid.Column="0"/>
+		<StackPanel x:Name="MyInfoPanel" Grid.Column="1">
+			<!--<TextBlock Text="Hello World" FontSize="64"/>-->
+		</StackPanel>
 	</Grid>
 </Page>

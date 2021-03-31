@@ -73,6 +73,7 @@ namespace ChineseChess2.Pages {
 			IsRedTurn = false;
 			for(int i = 0; i < WIDTH; i++) {
 				for(int j = 0; j < HEIGHT; j++) {
+					//jmxsksx1j/9/2p3mp1/b1b1P1b1b/9/2B6/B3B1B1B/4P4/9/JMXSKSXMJ/
 					nodes = Translator.LoadNodes(
 						"jmxsksxmj/9/4p2p1/b1b1P1b1b/9/9/B1B1B1B1B/7P1/9/JMXSKSXMJ/"
 					);
@@ -133,7 +134,7 @@ namespace ChineseChess2.Pages {
 			MyMainGrid.Children.Insert(0, tb);
 		}
 
-		public static void MakeMove(Move m) {
+		public static void MakeMove(Move m, bool updateDisplay = true) {
 			Node a = GetNode(m.from);
 			Node b = GetNode(m.to);
 			if(b.side != Side.Empty) {
@@ -144,7 +145,9 @@ namespace ChineseChess2.Pages {
 			}
 			IsRedTurn = !IsRedTurn;
 			history.Add(m);
-			UpdateDisplay();
+			if(updateDisplay) {
+				UpdateDisplay();
+			}
 			//ChessPage.ShowLastMove(a, b);
 
 			//if(!ChessPage.GameOver) {
@@ -159,7 +162,7 @@ namespace ChineseChess2.Pages {
 			//GetNode(0, 0).type = PieceType.BING;
 			//UpdateDisplay();
 		}
-		public static void UnmakeMove(Move m) {
+		public static void UnmakeMove(Move m, bool updateDisplay = true) {
 			GetNode(m.from).type = GetNode(m.to).type.Value;
 			GetNode(m.from).side = GetNode(m.to).side;
 			if(m.originalSide == Side.Empty) {
@@ -172,7 +175,9 @@ namespace ChineseChess2.Pages {
 
 			IsRedTurn = !IsRedTurn;
 			history.RemoveAt(history.Count - 1);
-			UpdateDisplay();
+			if(updateDisplay) {
+				UpdateDisplay();
+			}
 		}
 		public static bool IsInCheck(out Side inCheckSide) {
 			Node redK = GetKingNode(Side.Red);

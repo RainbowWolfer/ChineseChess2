@@ -27,7 +27,7 @@ namespace ChineseChess2.Class {
 			foreach(Move moveToVerify in pseudoMoves) {
 				ChessPage.MakeMove(moveToVerify);
 				List<Move> opponentResponses = GenerateMoves();
-				if(opponentResponses.Any(res => 
+				if(opponentResponses.Any(res =>
 					ChessPage.GetKingNode(OppositeSide).pos == res.to
 				)) {
 					//still in check if do this move;
@@ -266,6 +266,9 @@ namespace ChineseChess2.Class {
 
 		public override int GetHashCode() {
 			return base.GetHashCode();
+		}
+		public override string ToString() {
+			return from + " TO " + to;
 		}
 	}
 }

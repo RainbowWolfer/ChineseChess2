@@ -17,9 +17,20 @@ using Windows.UI.Xaml.Navigation;
 
 namespace ChineseChess2 {
 	public sealed partial class MainPage: Page {
+		public static MainPage Instance;
+		public static StackPanel _MyInfoPanel => Instance.MyInfoPanel;
 		public MainPage() {
+			Instance = this;
 			this.InitializeComponent();
 			MyFrame.Navigate(typeof(ChessPage));
+		}
+		public static void Log(string content) {
+			_MyInfoPanel.Children.Insert(0, new TextBlock() {
+				Text = content,
+				FontSize = 40,
+				TextWrapping = TextWrapping.WrapWholeWords,
+				Margin = new Thickness(0, 10, 0, 10)
+			});
 		}
 	}
 }

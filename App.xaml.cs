@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.DataTransfer;
@@ -25,7 +26,13 @@ namespace ChineseChess2 {
 		public App() {
 			this.InitializeComponent();
 			this.Suspending += OnSuspending;
+			//Task.Run(async () => {
+			//	await Task.Delay(1);
+			//	Debug.WriteLine("This is a thread");
+			//});
 		}
+
+		//public 
 
 		protected override void OnLaunched(LaunchActivatedEventArgs e) {
 			if(!(Window.Current.Content is Frame rootFrame)) {
@@ -64,8 +71,17 @@ namespace ChineseChess2 {
 						//ChessPage.IsInCheck(out Side side);
 						//Debug.WriteLine(side);
 						AI ai = new AI();
-						int i = ai.Search(2, -99999, 99999);
-						Debug.WriteLine(i);
+
+						long start = DateTime.Now.Ticks;
+						int sSec = DateTime.Now.Second;
+						ai.StartSearch(2);
+						long end = DateTime.Now.Ticks;
+						int eSec = DateTime.Now.Second;
+						MainPage.Log((end - start).ToString());
+						MainPage.Log((eSec - sSec).ToString());
+
+						Debug.WriteLine(ai.bestMove + "_" + ai.bestEval);
+						ChessPage.MakeMove(ai.bestMove);
 						break;
 				}
 			};

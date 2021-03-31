@@ -7,29 +7,50 @@ using System.Threading.Tasks;
 
 namespace ChineseChess2.Class {
 	public class AI {
-		public int Search(int depth, int alpha, int beta) {
+		public const int PositiveInfinity = 99999;
+		public const int NegativeInfinity = -PositiveInfinity;
+
+		public Move bestMove;
+		public int bestEval;
+
+		public void StartSearch(int depth) {
+			
+			Search(depth, 0, NegativeInfinity, PositiveInfinity);
+
+		}
+		public int Search(int depth, int plyFromRoot, int alpha, int beta) {
 			if(depth == 0) {
-				int eval = PieceValue.Evaluate(Side.Black);
+				int eval = PieceValue.Evaluate(ChessPage.CurrentSide);
 				return eval;
 			}
 
 			List<Move> moves = new MoveGenerator(ChessPage.nodes).GenerateLegalMovs();
 
 			if(moves.Count == 0) {
-				return int.MinValue;
+				return NegativeInfinity;
 			}
 
 			foreach(Move m in moves) {
-				ChessPage.MakeMove(m);
-				int evaluation = -Search(depth - 1, -beta, -alpha);
-				ChessPage.UnmakeMove(m);
+				ChessPage.MakeMove(m, updateDisplay: false);
+				int evaluation = -Search(depth - 1, plyFromRoot + 1, -beta, -alpha);
+				ChessPage.UnmakeMove(m, updateDisplay: false);
 				if(evaluation >= beta) {
 					return beta;
 				}
-				alpha = Math.Max(alpha, evaluation);
+				if(evaluation > alpha) {
+					alpha = evaluation;
+					if(plyFromRoot == 0) {
+						bestMove = m;
+						bestEval = evaluation;
+					}
+				}
+				//alpha = Math.Max(alpha, evaluation);
 			}
 
 			return alpha;
+		}
+		public int Search() {
+			return 0;
 		}
 		public void OrderMoves(List<Move> moves) {
 			var mg = new MoveGenerator(ChessPage.nodes);
@@ -45,7 +66,7 @@ namespace ChineseChess2.Class {
 				}
 
 				//foreach(Move m in mg.GenerateLegalMovs) {
-					
+
 				//}
 				if(false) {
 
