@@ -119,6 +119,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Class\AI.cs" />
     <Compile Include="Class\MoveGenerator.cs" />
     <Compile Include="Class\Node.cs" />
     <Compile Include="Class\PieceValue.cs" />

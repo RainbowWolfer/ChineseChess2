@@ -25,6 +25,8 @@ namespace ChineseChess2.Pages {
 		public static List<ChessNode> chessNodes;
 		public static Dictionary<Vector2, Node> nodes;
 
+		//public static Dictionary<Vector2, bool> redAttackMap;
+
 		public Selector selector;
 		public List<Selector> legalMoveSelectors;
 		public Selector[] lastMoveSelectors;
@@ -171,6 +173,28 @@ namespace ChineseChess2.Pages {
 			IsRedTurn = !IsRedTurn;
 			history.RemoveAt(history.Count - 1);
 			UpdateDisplay();
+		}
+		public static bool IsInCheck(out Side inCheckSide) {
+			Node redK = GetKingNode(Side.Red);
+			Node blackK = GetKingNode(Side.Black);
+
+			var mg = new MoveGenerator(nodes);
+			foreach(Node n in nodes.Values) {
+				if(n.type == null) {
+					continue;
+				}
+				foreach(Move m in mg.GetNodeMoves(n)) {
+					if(m.to == redK.pos) {
+						inCheckSide = Side.Red;
+						return true;
+					} else if(m.to == blackK.pos) {
+						inCheckSide = Side.Black;
+						return true;
+					}
+				}
+			}
+			inCheckSide = Side.Empty;
+			return false;
 		}
 		public static void CaptureNodes(Node a, Node b) {
 			b.side = a.side;

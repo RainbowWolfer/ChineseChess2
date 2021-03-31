@@ -3,28 +3,29 @@ using System;
 
 namespace ChineseChess2.Class {
 	public static class PieceValue {
-		public static int WIDTH => ChessPage.WIDTH;
-		public static int HEIGHT => ChessPage.HEIGHT;
-		public static bool IsSame(Side s) => !(ChessPage.isUpRed ^ s == Side.Red);
+		private static int WIDTH => ChessPage.WIDTH;
+		private static int HEIGHT => ChessPage.HEIGHT;
+		private static bool IsSame(Side s) => !(ChessPage.isUpRed ^ s == Side.Red);
 		//public static Side CurrentSide => ChessPage.CurrentSide;
 
+		/// <summary> Red -> 1, Black -> -1 </summary>
 		public static int Evaluate(Side s) {
-			int redEval = 0;
-			int blackEval = 0;
+			int redEval = CountMaterial(Side.Red);
+			int blackEval = CountMaterial(Side.Black);
 			int evaluation = redEval - blackEval;
 
-
-
-			return 0;
+			return evaluation * (s == Side.Red ? 1 : -1);
 		}
-		public static int CountMaterial(Side s) {
+		private static int CountMaterial(Side s) {
 			int material = 0;
 			foreach(Node item in ChessPage.nodes.Values) {
-				material += GetNodeValue(item);
+				if(item.side == s) {
+					material += GetNodeValue(item);
+				}
 			}
 			return material;
 		}
-		public static int GetNodeValue(Node node) {
+		private static int GetNodeValue(Node node) {
 			if(node.type == null) {
 				throw new Exception();
 			}
@@ -35,24 +36,24 @@ namespace ChineseChess2.Class {
 
 			switch(node.type.Value) {
 				case PieceType.BING:
-					return PieceValue.Value_BING[_y, _x];
+					return Value_BING[_y, _x];
 				case PieceType.PAO:
-					return PieceValue.Value_PAO[_y, _x];
+					return Value_PAO[_y, _x];
 				case PieceType.JU:
-					return PieceValue.Value_JU[_y, _x];
+					return Value_JU[_y, _x];
 				case PieceType.MA:
-					return PieceValue.Value_MA[_y, _x];
+					return Value_MA[_y, _x];
 				case PieceType.XIANG:
-					return PieceValue.Value_XIANG[_y, _x];
+					return Value_XIANG[_y, _x];
 				case PieceType.SHI:
-					return PieceValue.Value_SHI[_y, _x];
+					return Value_SHI[_y, _x];
 				case PieceType.SHUAI:
-					return PieceValue.Value_SHUAI[_y, _x];
+					return Value_SHUAI[_y, _x];
 				default:
 					throw new Exception();
 			}
 		}
-		public static int[,] Value_BING = {
+		private static int[,] Value_BING = {
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0,},
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0,},
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0,},
@@ -64,7 +65,7 @@ namespace ChineseChess2.Class {
 			{ 19, 24, 34, 42, 44, 42, 34, 24, 19, },
 			{ 9, 9, 9, 11, 13, 11, 9, 9, 9, },
 		};
-		public static int[,] Value_PAO = {
+		private static int[,] Value_PAO = {
 			{ 96, 96, 97, 99, 99, 99, 97, 96, 96,       },
 			{96, 97, 98, 98, 98, 98, 98, 97, 96,        },
 			{97, 96, 100, 99, 101, 99, 100, 96, 97,  },
@@ -76,7 +77,7 @@ namespace ChineseChess2.Class {
 			{98, 98, 96, 92, 89, 92, 96, 98, 98,        },
 			{100, 100, 96, 91, 90, 91, 96, 100, 100,},
 		};
-		public static int[,] Value_JU = {
+		private static int[,] Value_JU = {
 			 {194, 206, 204, 212, 200, 212, 204, 206, 194},
 			 {200, 208, 206, 212, 200, 212, 206, 208, 200,},
 			 {198, 208, 204, 212, 212, 212, 204, 208, 198,},
@@ -88,7 +89,7 @@ namespace ChineseChess2.Class {
 			 {206, 212, 209, 216, 233, 216, 209, 212, 206,},
 			 {206, 208, 207, 213, 214, 213, 207, 208, 206,},
 		};
-		public static int[,] Value_MA = {
+		private static int[,] Value_MA = {
 			{88, 85, 90, 88, 90, 88, 90, 85, 88,                   },
 			{85, 90, 92, 93, 78, 93, 92, 90, 85,                   },
 			{93, 92, 94, 95, 92, 95, 94, 92, 93,                   },
@@ -100,7 +101,7 @@ namespace ChineseChess2.Class {
 			{90, 96, 103, 97, 94, 97, 103, 96, 90,               },
 			{90, 90, 90, 96, 90, 96, 90, 90, 90,                   },
 		};
-		public static int[,] Value_XIANG = {
+		private static int[,] Value_XIANG = {
 			{0, 0, 20, 0, 0, 0, 20, 0, 0},
 			{0, 0, 0, 0, 0, 0, 0, 0, 0},
 			{18, 0, 0, 0, 23, 0, 0, 0, 18},
@@ -112,7 +113,7 @@ namespace ChineseChess2.Class {
 			{0, 0, 0, 0, 0, 0, 0, 0, 0},
 			{0, 0, 0, 0, 0, 0, 0, 0, 0},
 		};
-		public static int[,] Value_SHI = {
+		private static int[,] Value_SHI = {
 			{0, 0, 0, 20, 0, 20, 0, 0, 0},
 			{0, 0, 0, 0, 23, 0, 0, 0, 0},
 			{0, 0, 0, 20, 0, 20, 0, 0, 0},
@@ -124,7 +125,7 @@ namespace ChineseChess2.Class {
 			{0, 0, 0, 0, 0, 0, 0, 0, 0},
 			{0, 0, 0, 0, 0, 0, 0, 0, 0},
 		};
-		public static int[,] Value_SHUAI = {
+		private static int[,] Value_SHUAI = {
 			{0, 0, 0, 11, 15, 11, 0, 0, 0},
 			{0, 0, 0, 0, 2, 2, 2, 0, 0},
 			{0, 0, 0, 1, 1, 1, 0, 0, 0},

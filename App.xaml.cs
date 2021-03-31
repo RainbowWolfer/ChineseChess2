@@ -2,6 +2,7 @@
 using ChineseChess2.Pages;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -57,6 +58,14 @@ namespace ChineseChess2 {
 						break;
 					case VirtualKey.W:
 						ChessPage.UndoMode();
+						break;
+					case VirtualKey.F:
+						//Debug.WriteLine(PieceValue.Evaluate(Side.Red));
+						//ChessPage.IsInCheck(out Side side);
+						//Debug.WriteLine(side);
+						AI ai = new AI();
+						int i = ai.Search(2, -99999, 99999);
+						Debug.WriteLine(i);
 						break;
 				}
 			};
