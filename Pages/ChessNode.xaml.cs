@@ -102,6 +102,9 @@ namespace ChineseChess2.Pages {
 			MyTestText.Text = node.pos.ToString();
 			//MyTestText.Text = "";
 		}
+		public void ChangeTestText(string str) {
+			MyTestText.Text = str;
+		}
 
 		private void Grid_Tapped(object sender, TappedRoutedEventArgs e) {
 			onClick?.Invoke(this.node, this.pos);

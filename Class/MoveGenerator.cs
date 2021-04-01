@@ -25,7 +25,7 @@ namespace ChineseChess2.Class {
 			List<Move> pseudoMoves = GenerateMoves();
 			List<Move> legalMoves = new List<Move>();
 			foreach(Move moveToVerify in pseudoMoves) {
-				ChessPage.MakeMove(moveToVerify);
+				ChessPage.MakeMove(moveToVerify, false);
 				List<Move> opponentResponses = GenerateMoves();
 				if(opponentResponses.Any(res =>
 					ChessPage.GetKingNode(OppositeSide).pos == res.to
@@ -35,7 +35,7 @@ namespace ChineseChess2.Class {
 					legalMoves.Add(moveToVerify);
 				}
 
-				ChessPage.UnmakeMove(moveToVerify);
+				ChessPage.UnmakeMove(moveToVerify, false);
 			}
 
 			return legalMoves;
@@ -53,25 +53,29 @@ namespace ChineseChess2.Class {
 			}
 			return result;
 		}
-		public List<Move> GetNodeMoves(Node startNode) {
+		public List<Move> GetNodeMoves(Node startNode, bool friendlyDetect = false) {
 			if(startNode.type == null) {
 				throw new Exception("node type cannot be null");
 			}
 			List<Node> endNodes = new List<Node>();
 			int _x = startNode.pos.x;
 			int _y = startNode.pos.y;
+			//bool IsFriendly(Node a, Node b) {
+			//	return a.side == b.side || friendlyDetect;
+			//}
+			//IsFriendly(null, null);
 			switch(startNode.type.Value) {
 				case PieceType.BING: {
 						bool oversea = IsOverSea(startNode);
 						int y = _y + (IsSame(startNode.side) ? +1 : -1);
-						if(IsInBorder(_x, y) && startNode.side != GetNode(_x, y).side) {
+						if(IsInBorder(_x, y) && (startNode.side != GetNode(_x, y).side || friendlyDetect)) {
 							endNodes.Add(GetNode(_x, y));
 						}
 						if(oversea) {
-							if(IsInBorder(_x - 1, _y) && startNode.side != GetNode(_x - 1, _y).side) {
+							if(IsInBorder(_x - 1, _y) && (startNode.side != GetNode(_x - 1, _y).side || friendlyDetect)) {
 								endNodes.Add(GetNode(_x - 1, _y));
 							}
-							if(IsInBorder(_x + 1, _y) && startNode.side != GetNode(_x + 1, _y).side) {
+							if(IsInBorder(_x + 1, _y) && (startNode.side != GetNode(_x + 1, _y).side || friendlyDetect)) {
 								endNodes.Add(GetNode(_x + 1, _y));
 							}
 						}
@@ -88,10 +92,10 @@ namespace ChineseChess2.Class {
 										encouter = true;
 										continue;
 									}
-									if(!encouter && startNode.side != GetNode(x, y).side) {
+									if(!encouter && (startNode.side != GetNode(x, y).side || friendlyDetect)) {
 										endNodes.Add(GetNode(x, y));
 									}
-									if(GetNode(x, y).side != Side.Empty && encouter && startNode.side != GetNode(x, y).side) {
+									if(GetNode(x, y).side != Side.Empty && encouter && (startNode.side != GetNode(x, y).side || friendlyDetect)) {
 										endNodes.Add(GetNode(x, y));
 										break;
 									}
@@ -110,7 +114,7 @@ namespace ChineseChess2.Class {
 								int x = hor ? i : _x;
 								int y = hor ? _y : i;
 								if(IsInBorder(x, y)) {
-									if(startNode.side != GetNode(x, y).side) {
+									if(startNode.side != GetNode(x, y).side || friendlyDetect) {
 										endNodes.Add(GetNode(x, y));
 									}
 									if(GetNode(x, y).side != Side.Empty) {
@@ -129,7 +133,7 @@ namespace ChineseChess2.Class {
 						void Add(int dx, int dy) {
 							bool b = Math.Abs(dx) > Math.Abs(dy);
 							if(IsInBorder(_x + dx, _y + dy)) {
-								if(GetNode(_x + (b ? (dx > 0 ? 1 : -1) : 0), _y + (b ? 0 : (dy > 0 ? 1 : -1))).side == Side.Empty && startNode.side != GetNode(_x + dx, _y + dy).side) {
+								if(GetNode(_x + (b ? (dx > 0 ? 1 : -1) : 0), _y + (b ? 0 : (dy > 0 ? 1 : -1))).side == Side.Empty && (startNode.side != GetNode(_x + dx, _y + dy).side || friendlyDetect)) {
 									endNodes.Add(GetNode(_x + dx, _y + dy));
 								}
 							}
@@ -149,7 +153,10 @@ namespace ChineseChess2.Class {
 						void Add(bool hor, bool ver) {//positive => +1
 							int dx = hor ? m : -m;
 							int dy = ver ? m : -m;
-							if(!IsInBorder(_x + dx, _y + dy) || IsOverSea(GetNode(_x + dx, _y + dy), startNode.side) || startNode.side == GetNode(_x + dx, _y + dy).side) {
+							if(!IsInBorder(_x + dx, _y + dy) || IsOverSea(GetNode(_x + dx, _y + dy), startNode.side)) {
+								return;
+							}
+							if(startNode.side == GetNode(_x + dx, _y + dy).side && !friendlyDetect) {
 								return;
 							}
 							for(int i = 1; i < m; i++) {
@@ -169,7 +176,10 @@ namespace ChineseChess2.Class {
 						void Add(bool hor, bool ver) {//positive => +1
 							int dx = hor ? 1 : -1;
 							int dy = ver ? 1 : -1;
-							if(!IsInBorder(_x + dx, _y + dy) || IsOverSea(GetNode(_x + dx, _y + dy), startNode.side) || !GetNode(_x + dx, _y + dy).castle || startNode.side == GetNode(_x + dx, _y + dy).side) {
+							if(!IsInBorder(_x + dx, _y + dy) || IsOverSea(GetNode(_x + dx, _y + dy), startNode.side) || !GetNode(_x + dx, _y + dy).castle) {
+								return;
+							}
+							if(startNode.side == GetNode(_x + dx, _y + dy).side && !friendlyDetect) {
 								return;
 							}
 							endNodes.Add(GetNode(_x + dx, _y + dy));
@@ -182,7 +192,7 @@ namespace ChineseChess2.Class {
 					}
 				case PieceType.SHUAI: {
 						void Add(int dx, int dy) {
-							if(IsInBorder(_x + dx, _y + dy) && GetNode(_x + dx, _y + dy).castle && startNode.side != GetNode(_x + dx, _y + dy).side) {
+							if(IsInBorder(_x + dx, _y + dy) && GetNode(_x + dx, _y + dy).castle && (startNode.side != GetNode(_x + dx, _y + dy).side || friendlyDetect)) {
 								endNodes.Add(GetNode(_x + dx, _y + dy));
 							}
 						}

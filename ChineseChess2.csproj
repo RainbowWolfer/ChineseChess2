@@ -131,6 +131,7 @@
     </Compile>
     <Compile Include="Class\AI.cs" />
     <Compile Include="Class\MoveGenerator.cs" />
+    <Compile Include="Class\MoveOrdering.cs" />
     <Compile Include="Class\Node.cs" />
     <Compile Include="Class\PieceValue.cs" />
     <Compile Include="Class\Translator.cs" />

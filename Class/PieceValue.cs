@@ -25,7 +25,7 @@ namespace ChineseChess2.Class {
 			}
 			return material;
 		}
-		private static int GetNodeValue(Node node) {
+		public static int GetNodeValue(Node node) {
 			if(node.type == null) {
 				throw new Exception();
 			}
@@ -53,7 +53,11 @@ namespace ChineseChess2.Class {
 					throw new Exception();
 			}
 		}
-		private static int[,] Value_BING = {
+		public static int CalculateAverage(int[,] source) {
+			
+			return 0;
+		}
+		private static readonly int[,] Value_BING = {
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0,},
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0,},
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0,},
@@ -65,7 +69,7 @@ namespace ChineseChess2.Class {
 			{ 19, 24, 34, 42, 44, 42, 34, 24, 19, },
 			{ 9, 9, 9, 11, 13, 11, 9, 9, 9, },
 		};
-		private static int[,] Value_PAO = {
+		private static readonly int[,] Value_PAO = {
 			{ 96, 96, 97, 99, 99, 99, 97, 96, 96,       },
 			{96, 97, 98, 98, 98, 98, 98, 97, 96,        },
 			{97, 96, 100, 99, 101, 99, 100, 96, 97,  },
@@ -77,7 +81,7 @@ namespace ChineseChess2.Class {
 			{98, 98, 96, 92, 89, 92, 96, 98, 98,        },
 			{100, 100, 96, 91, 90, 91, 96, 100, 100,},
 		};
-		private static int[,] Value_JU = {
+		private static readonly int[,] Value_JU = {
 			 {194, 206, 204, 212, 200, 212, 204, 206, 194},
 			 {200, 208, 206, 212, 200, 212, 206, 208, 200,},
 			 {198, 208, 204, 212, 212, 212, 204, 208, 198,},
@@ -89,7 +93,7 @@ namespace ChineseChess2.Class {
 			 {206, 212, 209, 216, 233, 216, 209, 212, 206,},
 			 {206, 208, 207, 213, 214, 213, 207, 208, 206,},
 		};
-		private static int[,] Value_MA = {
+		private static readonly int[,] Value_MA = {
 			{88, 85, 90, 88, 90, 88, 90, 85, 88,                   },
 			{85, 90, 92, 93, 78, 93, 92, 90, 85,                   },
 			{93, 92, 94, 95, 92, 95, 94, 92, 93,                   },
@@ -101,7 +105,7 @@ namespace ChineseChess2.Class {
 			{90, 96, 103, 97, 94, 97, 103, 96, 90,               },
 			{90, 90, 90, 96, 90, 96, 90, 90, 90,                   },
 		};
-		private static int[,] Value_XIANG = {
+		private static readonly int[,] Value_XIANG = {
 			{0, 0, 20, 0, 0, 0, 20, 0, 0},
 			{0, 0, 0, 0, 0, 0, 0, 0, 0},
 			{18, 0, 0, 0, 23, 0, 0, 0, 18},
@@ -113,7 +117,7 @@ namespace ChineseChess2.Class {
 			{0, 0, 0, 0, 0, 0, 0, 0, 0},
 			{0, 0, 0, 0, 0, 0, 0, 0, 0},
 		};
-		private static int[,] Value_SHI = {
+		private static readonly int[,] Value_SHI = {
 			{0, 0, 0, 20, 0, 20, 0, 0, 0},
 			{0, 0, 0, 0, 23, 0, 0, 0, 0},
 			{0, 0, 0, 20, 0, 20, 0, 0, 0},
@@ -125,9 +129,9 @@ namespace ChineseChess2.Class {
 			{0, 0, 0, 0, 0, 0, 0, 0, 0},
 			{0, 0, 0, 0, 0, 0, 0, 0, 0},
 		};
-		private static int[,] Value_SHUAI = {
+		private static readonly int[,] Value_SHUAI = {
 			{0, 0, 0, 11, 15, 11, 0, 0, 0},
-			{0, 0, 0, 0, 2, 2, 2, 0, 0},
+			{0, 0, 0, 2, 2, 2, 0, 0, 0},
 			{0, 0, 0, 1, 1, 1, 0, 0, 0},
 			{0, 0, 0, 0, 0, 0, 0, 0, 0},
 			{0, 0, 0, 0, 0, 0, 0, 0, 0},

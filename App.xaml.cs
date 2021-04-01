@@ -53,7 +53,7 @@ namespace ChineseChess2 {
 				}
 				Window.Current.Activate();
 			}
-			Window.Current.CoreWindow.KeyDown += (s, c) => {
+			Window.Current.CoreWindow.KeyDown += async (s, c) => {
 				switch(c.VirtualKey) {
 					case VirtualKey.C:
 						string str = Translator.Translate(ChessPage.nodes);
@@ -63,24 +63,35 @@ namespace ChineseChess2 {
 						dp.SetText(str);
 						Clipboard.SetContent(dp);
 						break;
-					case VirtualKey.W:
-						ChessPage.UndoMode();
+					case VirtualKey.Q:
+						ChessPage.DrawTrueFalse(new MoveOrdering(new MoveGenerator(ChessPage.nodes)).GetOpponentAttackMap());
 						break;
 					case VirtualKey.F:
 						//Debug.WriteLine(PieceValue.Evaluate(Side.Red));
 						//ChessPage.IsInCheck(out Side side);
 						//Debug.WriteLine(side);
+						MainPage.ShowSearchingText(true);
+
+						List<Move> moves = new MoveGenerator(ChessPage.nodes).GenerateLegalMovs();
+						var o = new MoveOrdering(new MoveGenerator(ChessPage.nodes));
+						o.OrderMoves(moves);
+						o.PrintToMainPage(moves);
+
+						await Task.Delay(1);
 						AI ai = new AI();
 
 						long start = DateTime.Now.Ticks;
 						int sSec = DateTime.Now.Second;
-						ai.StartSearch(2);
+						ai.StartSearch(MainPage.searchDepth);
 						long end = DateTime.Now.Ticks;
 						int eSec = DateTime.Now.Second;
-						MainPage.Log((end - start).ToString() + "\n" + (eSec - sSec).ToString());
+						MainPage.Log(((end - start) / 10000).ToString() + "ms\n" + (eSec - sSec).ToString() + "  Count : " + ai.searchCount);
 
 						Debug.WriteLine(ai.bestMove + "_" + ai.bestEval);
 						ChessPage.MakeMove(ai.bestMove);
+
+
+						MainPage.ShowSearchingText(false);
 						break;
 				}
 			};

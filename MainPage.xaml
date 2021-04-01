@@ -14,11 +14,38 @@
 			<ColumnDefinition MaxWidth="400"/>
 		</Grid.ColumnDefinitions>
 		<Frame x:Name="MyFrame" Grid.Column="0"/>
-		<ScrollViewer Grid.Column="1" Margin="10,0,0,0">
-			<StackPanel x:Name="MyInfoPanel" >
-
-				<!--<TextBlock Text="Hello World" FontSize="64"/>-->
+		<Grid Grid.Column="1" Margin="10,0,0,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="200"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<StackPanel Grid.Row="0" >
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Search Depth : " VerticalAlignment="Center"/>
+					<DropDownButton Width="100" Name="MyDropDownButton" Margin="20,0,20,0" Content="2">
+						<DropDownButton.Flyout>
+							<MenuFlyout>
+								<MenuFlyoutItem Text="1" Click="Click1"/>
+								<MenuFlyoutItem Text="2" Click="Click2"/>
+								<MenuFlyoutItem Text="3" Click="Click3"/>
+								<MenuFlyoutItem Text="4" Click="Click4"/>
+								<MenuFlyoutItem Text="5" Click="Click5"/>
+							</MenuFlyout>
+						</DropDownButton.Flyout>
+					</DropDownButton>
+					<TextBlock x:Name="MySearchingText" Text="Seaching..." VerticalAlignment="Center"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+					<Button x:Name="UndoButton" Height="40" Width="100" Content="悔棋" Margin="20,20,20,0" Click="UndoButton_Click"/>
+					<Button x:Name="MySearchButton" Margin="20,20,20,0" Height="40" Width="100" Content="AI搜索" Click="MySearchButton_Click"/>
+				</StackPanel>
 			</StackPanel>
-		</ScrollViewer>
+			<ScrollViewer Grid.Row="1">
+				<StackPanel x:Name="MyInfoPanel" >
+
+					<!--<TextBlock Text="Hello World" FontSize="64"/>-->
+				</StackPanel>
+			</ScrollViewer>
+		</Grid>
 	</Grid>
 </Page>

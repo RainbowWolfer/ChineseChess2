@@ -22,6 +22,9 @@ namespace ChineseChess2.Pages {
 		public const int HEIGHT = 10;
 		public const string DEFAULTOPENING = "jmxsksxmj/9/1p5p1/b1b1b1b1b/9/9/B1B1B1B1B/1P5P1/9/JMXSKSXMJ/";
 
+		public static ChessPage Instance;
+		public static Grid _MyMainGrid => Instance.MyMainGrid;
+
 		public static List<ChessNode> chessNodes;
 		public static Dictionary<Vector2, Node> nodes;
 
@@ -29,7 +32,7 @@ namespace ChineseChess2.Pages {
 
 		public Selector selector;
 		public List<Selector> legalMoveSelectors;
-		public Selector[] lastMoveSelectors;
+		public static Selector[] lastMoveSelectors;
 
 		public static event OnTurnChangeEventHandler OnTurnChanged;
 
@@ -54,8 +57,15 @@ namespace ChineseChess2.Pages {
 
 		public ChessPage() {
 			this.InitializeComponent();
+			Instance = this;
 			startPos = DefaultPos;
 			history = new List<Move>();
+		}
+		/// <summary> Test </summary>
+		public static void DrawTrueFalse(Dictionary<Vector2, bool> bs) {
+			foreach(ChessNode item in chessNodes) {
+				item.ChangeTestText(item.pos + "\n" + bs[item.pos]);
+			}
 		}
 
 		protected override void OnNavigatedTo(NavigationEventArgs e) {
@@ -70,18 +80,20 @@ namespace ChineseChess2.Pages {
 			selector = new Selector(Vector2.Zero, Colors.Blue) { Visible = false };
 			MyMainGrid.Children.Insert(0, selector);
 
-			IsRedTurn = false;
+			IsRedTurn = true;
 			for(int i = 0; i < WIDTH; i++) {
 				for(int j = 0; j < HEIGHT; j++) {
 					//jmxsksx1j/9/2p3mp1/b1b1P1b1b/9/2B6/B3B1B1B/4P4/9/JMXSKSXMJ/
-					nodes = Translator.LoadNodes(
-						"jmxsksxmj/9/4p2p1/b1b1P1b1b/9/9/B1B1B1B1B/7P1/9/JMXSKSXMJ/"
-					);
+					//nodes = Translator.LoadNodes(
+					//	"jmxsksxmj/9/4p2p1/b1b1P1b1b/9/9/B1B1B1B1B/7P1/9/JMXSKSXMJ/"
+					//);
+					nodes = Translator.LoadNodes(DEFAULTOPENING);
 					ChessNode cn = new ChessNode(GetNode(i, j));
 					cn.onClick += (n, p) => {
 						List<Move> legalMoves = new MoveGenerator(nodes).GenerateLegalMovs();
 						if(legalMoves.Count == 0) {
-							throw new Exception("WOW");
+							return;
+							//throw new Exception("WOW");
 						}
 						void Select(Vector2 target) {
 							startPos = target;
@@ -135,6 +147,9 @@ namespace ChineseChess2.Pages {
 		}
 
 		public static void MakeMove(Move m, bool updateDisplay = true) {
+			if(m == null) {
+				return;
+			}
 			Node a = GetNode(m.from);
 			Node b = GetNode(m.to);
 			if(b.side != Side.Empty) {
@@ -147,6 +162,7 @@ namespace ChineseChess2.Pages {
 			history.Add(m);
 			if(updateDisplay) {
 				UpdateDisplay();
+				UpdateLastMoveSelectors(m);
 			}
 			//ChessPage.ShowLastMove(a, b);
 
@@ -177,6 +193,11 @@ namespace ChineseChess2.Pages {
 			history.RemoveAt(history.Count - 1);
 			if(updateDisplay) {
 				UpdateDisplay();
+				if(history.Count > 0) {
+					UpdateLastMoveSelectors(history[history.Count - 1]);
+				} else {
+					UpdateLastMoveSelectors(null);
+				}
 			}
 		}
 		public static bool IsInCheck(out Side inCheckSide) {
@@ -214,7 +235,23 @@ namespace ChineseChess2.Pages {
 			b.type = tmp.Item1;
 			b.side = tmp.Item2;
 		}
+		public static void UpdateLastMoveSelectors(Move m) {
+			if(lastMoveSelectors[0] != null) {
+				_MyMainGrid.Children.Remove(lastMoveSelectors[0]);
+			}
+			if(lastMoveSelectors[1] != null) {
+				_MyMainGrid.Children.Remove(lastMoveSelectors[1]);
+			}
+			if(m == null) {
+				return;
+			}
 
+			lastMoveSelectors[0] = new Selector(m.from, Colors.Red);
+			lastMoveSelectors[1] = new Selector(m.to, Colors.Red);
+
+			_MyMainGrid.Children.Insert(0, lastMoveSelectors[0]);
+			_MyMainGrid.Children.Insert(0, lastMoveSelectors[1]);
+		}
 		public static void UpdateDisplay() {
 			foreach(ChessNode item in chessNodes) {
 				item.node = nodes[item.pos];
@@ -260,6 +297,8 @@ namespace ChineseChess2.Pages {
 		public static Node GetNode(int x, int y) => nodes[new Vector2(x, y)];
 		public static Node GetNode(Vector2 v) => GetNode(v.x, v.y);
 
+		public static string ConvertChinese(Node n) => ConvertChinese(n.type == null ? PieceType.BING : n.type.Value, n.side);//bing is not used 
+		public static string ConvertChinese(Vector2 pos) => ConvertChinese(GetNode(pos));
 		public static string ConvertChinese(PieceType pt, Side side) {
 			if(side == Side.Empty) {
 				return "空";
