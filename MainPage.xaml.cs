@@ -26,8 +26,8 @@ namespace ChineseChess2 {
 		}
 		public static void Log(string content) {
 			_MyInfoPanel.Children.Insert(0, new TextBlock() {
-				Text = content,
-				FontSize = 40,
+				Text = App.GetCurrentTime() + content,
+				FontSize = 20,
 				TextWrapping = TextWrapping.WrapWholeWords,
 				Margin = new Thickness(0, 10, 0, 10)
 			});

@@ -77,14 +77,16 @@ namespace ChineseChess2 {
 						ai.StartSearch(2);
 						long end = DateTime.Now.Ticks;
 						int eSec = DateTime.Now.Second;
-						MainPage.Log((end - start).ToString());
-						MainPage.Log((eSec - sSec).ToString());
+						MainPage.Log((end - start).ToString() + "\n" + (eSec - sSec).ToString());
 
 						Debug.WriteLine(ai.bestMove + "_" + ai.bestEval);
 						ChessPage.MakeMove(ai.bestMove);
 						break;
 				}
 			};
+		}
+		public static string GetCurrentTime() {
+			return " (" + DateTime.Now.Hour + " : " + DateTime.Now.Minute + " : " + DateTime.Now.Second + ") ";
 		}
 
 		void OnNavigationFailed(object sender, NavigationFailedEventArgs e) {

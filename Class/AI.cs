@@ -25,6 +25,7 @@ namespace ChineseChess2.Class {
 			}
 
 			List<Move> moves = new MoveGenerator(ChessPage.nodes).GenerateLegalMovs();
+			OrderMoves(moves);
 
 			if(moves.Count == 0) {
 				return NegativeInfinity;
@@ -44,7 +45,6 @@ namespace ChineseChess2.Class {
 						bestEval = evaluation;
 					}
 				}
-				//alpha = Math.Max(alpha, evaluation);
 			}
 
 			return alpha;

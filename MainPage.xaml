@@ -14,8 +14,11 @@
 			<ColumnDefinition MaxWidth="400"/>
 		</Grid.ColumnDefinitions>
 		<Frame x:Name="MyFrame" Grid.Column="0"/>
-		<StackPanel x:Name="MyInfoPanel" Grid.Column="1">
-			<!--<TextBlock Text="Hello World" FontSize="64"/>-->
-		</StackPanel>
+		<ScrollViewer Grid.Column="1" Margin="10,0,0,0">
+			<StackPanel x:Name="MyInfoPanel" >
+
+				<!--<TextBlock Text="Hello World" FontSize="64"/>-->
+			</StackPanel>
+		</ScrollViewer>
 	</Grid>
 </Page>
