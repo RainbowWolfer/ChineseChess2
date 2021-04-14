@@ -92,8 +92,11 @@ namespace ChineseChess2.Class {
 										encouter = true;
 										continue;
 									}
-									if(!encouter && (startNode.side != GetNode(x, y).side || friendlyDetect)) {
+									if(!encouter && startNode.side != GetNode(x, y).side) {
 										endNodes.Add(GetNode(x, y));
+									}
+									if(GetNode(x, y).side != Side.Empty && encouter && startNode.side == GetNode(x, y).side) {
+										break;
 									}
 									if(GetNode(x, y).side != Side.Empty && encouter && (startNode.side != GetNode(x, y).side || friendlyDetect)) {
 										endNodes.Add(GetNode(x, y));
